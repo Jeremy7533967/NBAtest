@@ -7,7 +7,7 @@ Description: NBA salary data from www.hoopshype.com
 """
 
 import requests 
-import bs4 as bs
+from bs4 import BeautifulSoup as bs
 import pandas as pd
 import os
 import time
