@@ -3,26 +3,21 @@ import os
 from bs4 import BeautifulSoup as bs
 import pandas as pd
 
-def nba_players_state(total:str):
-    
-    dirname = "nba_players_state"
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
+def nba_player_state(year:int):
 
-    for year in range(2015,2026):
-       url = f"https://www.basketball-reference.com/leagues/NBA_{year}_totals.html"
-       resp = req.urlopen(url)
-       content = resp.read()
-       html = bs(content, 'html.parser')
+    url = f"https://www.basketball-reference.com/leagues/NBA_{year}_totals.html"
 
-       table = html.find("tbody")
-       rows = table.find_all("tr")
+    resp = req.urlopen(url)
+    content = resp.read()
+    html = bs(content, 'html.parser')
 
-       players = []
-       names_seen = set()
-
-       for row in rows:
-        # 跳過空列或是有 'class=thead' 的分隔列
+    table = html.find("tbody")
+    rows = table.find_all("tr")
+    players = []
+    names_seen = set()
+        
+    for row in rows:
+    # 跳過空列或是有 'class=thead' 的分隔列
         if row.get("class") == ['thead']:
             continue
 
@@ -126,9 +121,17 @@ def nba_players_state(total:str):
                 "points":pts
                 })
             names_seen.add(name)
+        
+        # return players
 
-        return players
+    dirname = "nba_players_state"
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
 
     df = pd.DataFrame(players)
     df.index += 1
-    df.to_csv(f"nba_players_state_{year}.csv", encoding="utf-8-sig")
+    fn = os.path.join(dirname, f"nba_players_{year}.csv")
+    df.to_csv(fn, encoding="utf-8-sig")
+
+
+print(nba_player_state(1999))
