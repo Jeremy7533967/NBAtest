@@ -87,6 +87,7 @@ def nba_teams_advancedstate(year:int):
 
         if team not in team_seen:
             teams.append({
+                "year": year,
                 "team": team,
                 "average_age": age,
                 "wins": wins,

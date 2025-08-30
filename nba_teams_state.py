@@ -79,6 +79,7 @@ def nba_teams_state(year:int):
 
         if team not in team_seen:
             teams.append({
+                "year": year,
                 "team": team,
                 "games": g,
                 "minutes_played": mp,

@@ -89,6 +89,7 @@ def nba_player_state(year:int):
 
         if name not in names_seen:
             players.append({
+                "year": year,
                 "name": name,
                 "team": team,
                 "age": age,
@@ -130,8 +131,8 @@ def nba_player_state(year:int):
 
     df = pd.DataFrame(players)
     df.index += 1
-    fn = os.path.join(dirname, f"nba_players_{year}.csv")
+    fn = os.path.join(dirname, f"nba_players_state_{year}.csv")
     df.to_csv(fn, encoding="utf-8-sig")
 
 
-print(nba_player_state(1999))
+print(nba_player_state(2003))
