@@ -113,6 +113,9 @@ def nba_players_salary(year):
         os.mkdir(dirname)
 
     df = pd.DataFrame(all_rows)
+    df['team_cut'] = df["team"].str.split('-')
+    df['team'] = df['team_cut'].str[-1]
+    df.drop(columns=['team_cut'], inplace=True)
     df.index += 1
     fn = os.path.join(dirname, f"nba_players_salary_{year}.csv")
     # print(df)
