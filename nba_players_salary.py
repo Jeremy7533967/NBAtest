@@ -125,6 +125,8 @@ def nba_players_salary(year):
     # with open('salary.json', 'w', encoding='utf-8') as f:
     #     json.dump(row, f, indent=4, ensure_ascii=False)
 
+    return df
+
 
 
 
@@ -136,4 +138,4 @@ def nba_players_salary(year):
 
 #         player_year_salary(year)
 
-print(nba_players_salary(2016))
+print(nba_players_salary(2025))

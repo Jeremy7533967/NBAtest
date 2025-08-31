@@ -70,7 +70,6 @@ def nba_player_state(year:int):
         pa2 = pa2_cell.text.strip()
         p2_pct = p2_pct_cell.text.strip()
         efg_pct = efg_pct_cell.text.strip()
-        e_fga_pct = e_fga_pct_cell.text.strip()
         ft = ft_cell.text.strip()
         fta = fta_cell.text.strip()
         ft_pct = ft_pct_cell.text.strip()
@@ -132,5 +131,6 @@ def nba_player_state(year:int):
     fn = os.path.join(dirname, f"nba_players_state_{year}.csv")
     df.to_csv(fn, encoding="utf-8-sig")
 
+    return df
 
-print(nba_player_state(2020))
+print(nba_player_state(2011))

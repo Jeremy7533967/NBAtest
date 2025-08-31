@@ -6,60 +6,82 @@ import os
 import lxml
 
 
-dirname = "nba_teams_salary"
-if not os.path.exists(dirname):
+def nba_teams_salary(year: int):
+    dirname = "nba_teams_salary"
+    if not os.path.exists(dirname):
         os.mkdir(dirname)
 
-for year in range(2015, 2026):
-    url = f"https://www.hoopshype.com/salaries/teams/?season={year}"
+    url = f'https://www.hoopshype.com/salaries/teams/?season={year}'
     response = requests.get(url)
-
-    try:
-        tables = pd.read_html(response.text)
-        df = tables[0]
-        fn = os.path.join(dirname, f"salary_{year}.csv")
-        df.to_csv(fn, index=False)
-
-    except Exception as e:
-        print(f"{year} 資料讀取失敗: {e}")
-
-#合併2015-2025球隊薪資表格成一份
-
-years = range(2015, 2026)
-dfs = []
-
-for year in years:
+    tables = pd.read_html(response.text)
+    df = tables[0]
+    df.rename(columns={df.columns[0]: 'years'}, inplace=True)
+    df.rename(columns={df.columns[2]: 'salary'}, inplace=True)
+    df['years'] = year 
+    df['salary'] = df['salary'].str.replace('$', '', regex=False).str.replace(',', '', regex=False)
+    if year == 2025:
+        df.drop(df.columns[3:6], axis=1, inplace=True)
+    
     fn = os.path.join(dirname, f"salary_{year}.csv")
-    df = pd.read_csv(fn)
-    if "Team" in df.columns:
-        df["Team"] = df["Team"].str.strip().str.lower()
-    dfs.append(df)
+    df.to_csv(fn, index=False)
 
-# 合併所有年度資料，欄位不同 pandas 會自動補缺值NaN
-all_years = pd.concat(dfs, axis=0, sort=True)
-
-if 'Unnamed: 0' in all_years.columns:
-    all_years = all_years.drop(columns=['Unnamed: 0'])
-
-agg_dict = {}
+    return df
 
 
-for col in all_years.columns:
-    if col == "Team":
-        agg_dict[col] = "first"
-    elif col == "year":
-        agg_dict[col] = lambda x: ", ".join(map(str, sorted(x.unique())))
-    else:
-        agg_dict[col] = lambda x: ", ".join(x.dropna().astype(str).unique())
+# dirname = "nba_teams_salary"
+# if not os.path.exists(dirname):
+#         os.mkdir(dirname)
+
+# for year in range(2015, 2026):
+#     url = f"https://www.hoopshype.com/salaries/teams/?season={year}"
+#     response = requests.get(url)
+
+#     try:
+#         tables = pd.read_html(response.text)
+#         df = tables[0]
+#         fn = os.path.join(dirname, f"salary_{year}.csv")
+#         df.to_csv(fn, index=False)
+
+#     except Exception as e:
+#         print(f"{year} 資料讀取失敗: {e}")
+
+# #合併2015-2025球隊薪資表格成一份
+
+# years = range(2015, 2026)
+# dfs = []
+
+# for year in years:
+#     fn = os.path.join(dirname, f"salary_{year}.csv")
+#     df = pd.read_csv(fn)
+#     if "Team" in df.columns:
+#         df["Team"] = df["Team"].str.strip().str.lower()
+#     dfs.append(df)
+
+# # 合併所有年度資料，欄位不同 pandas 會自動補缺值NaN
+# all_years = pd.concat(dfs, axis=0, sort=True)
+
+# if 'Unnamed: 0' in all_years.columns:
+#     all_years = all_years.drop(columns=['Unnamed: 0'])
+
+# agg_dict = {}
 
 
-# 使用 groupby 聚合
-grouped = all_years.groupby("Team").agg(agg_dict).reset_index(drop=True)
+# for col in all_years.columns:
+#     if col == "Team":
+#         agg_dict[col] = "first"
+#     elif col == "year":
+#         agg_dict[col] = lambda x: ", ".join(map(str, sorted(x.unique())))
+#     else:
+#         agg_dict[col] = lambda x: ", ".join(x.dropna().astype(str).unique())
 
-grouped.index = grouped.index + 1
 
-# team 欄移至第一欄
-team_col = grouped.pop("Team")
-grouped.insert(0, "Team", team_col)
-fn = os.path.join(dirname, 'nba_teams_salary.csv')
-grouped.to_csv(fn, index=True)
+# # 使用 groupby 聚合
+# grouped = all_years.groupby("Team").agg(agg_dict).reset_index(drop=True)
+
+# grouped.index = grouped.index + 1
+
+# # team 欄移至第一欄
+# team_col = grouped.pop("Team")
+# grouped.insert(0, "Team", team_col)
+# fn = os.path.join(dirname, 'nba_teams_salary.csv')
+# grouped.to_csv(fn, index=True)

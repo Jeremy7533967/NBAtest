@@ -131,5 +131,6 @@ def nba_teams_advancedstate(year:int):
     fn = os.path.join(dirname, f"nba_teams_advancedstate_{year}.csv")
     df.to_csv(fn, encoding="utf-8-sig")
 
+    return df
 
-print(nba_teams_advancedstate(2023))    
+print(nba_teams_advancedstate(2022))    
