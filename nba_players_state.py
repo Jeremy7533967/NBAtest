@@ -39,7 +39,6 @@ def nba_player_state(year:int):
         pa2_cell = row.find("td", {"data-stat": "fg2a"})
         p2_pct_cell = row.find("td", {"data-stat": "fg2_pct"})
         efg_pct_cell = row.find("td", {"data-stat": "efg_pct"})
-        e_fga_pct_cell = row.find("td", {"data-stat": "efg_pct"})
         ft_cell = row.find("td", {"data-stat": "ft"})
         fta_cell = row.find("td", {"data-stat": "fta"})
         ft_pct_cell = row.find("td", {"data-stat": "ft_pct"})
@@ -90,7 +89,7 @@ def nba_player_state(year:int):
         if name not in names_seen:
             players.append({
                 "year": year,
-                "name": name,
+                "players": name,
                 "team": team,
                 "age": age,
                 "pos": pos,
@@ -107,7 +106,6 @@ def nba_player_state(year:int):
                 "2p_field_goals_attempts": pa2,
                 "2p_field_goals_percentage": p2_pct,
                 "efg_pct": efg_pct,
-                "e_fga_pct": e_fga_pct,
                 "free_throws": ft,
                 "free_throws_attempts": fta,
                 "free_throws_percentage": ft_pct,
@@ -135,4 +133,4 @@ def nba_player_state(year:int):
     df.to_csv(fn, encoding="utf-8-sig")
 
 
-print(nba_player_state(2003))
+print(nba_player_state(2020))

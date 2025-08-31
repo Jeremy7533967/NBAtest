@@ -96,9 +96,9 @@ def nba_players_salary(year):
 
             for i in range(len(player_list)):
                 all_rows.append({
-                    'year': year,
-                    'team': team_name,
+                    'year': year,                    
                     'players': player_list[i],
+                    'team': team_name,
                     'salary': salary_list[i]
                 })
 
@@ -136,4 +136,4 @@ def nba_players_salary(year):
 
 #         player_year_salary(year)
 
-print(nba_players_salary(2015))
+print(nba_players_salary(2016))
